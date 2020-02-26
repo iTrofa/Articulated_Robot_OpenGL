@@ -26,9 +26,25 @@
 
 #include<stdlib.h>
 #include<stdio.h>
+#include<math.h>
 
+float alpha = 0.0;
+float teta = 0.0;
+float R = 5.0;
 
+float xo, yo, zo;
+/*float xo = R*cos(teta)*sin(alpha);
+float yo = R*sin(teta);
+float zo = R*cos(teta)*cos(alpha);*/
+float xi = 0.0;
+float yi = 0.0;
+float zi= 0.0;
+float u = 0.0;
+float v = 1;
+float w = 0.0;
+GLUquadricObj *obj;
 
+int f = 0;
 
 float left_arm = 0.0;
 int left_arm_check = 0;
@@ -141,10 +157,12 @@ void display(void){
 	glLoadIdentity();
 
 
+xo = R * cos(teta) * sin(alpha);
+yo = R * sin(teta);
+zo = R * cos(teta) * cos(alpha);
 
-
-	gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	glTranslatef(0.0f, 0.0f, -5.0f);                      // déplacement caméra
+	gluLookAt(xo, yo, zo, xi, yi, zi, u, v, w);
+	/*glTranslatef(0.0f, 0.0f, -5.0f);   */                   // déplacement caméra
 	glColor3f(1.0f, 1.0f, 1.0f);
 
 
@@ -218,7 +236,7 @@ void display(void){
 
 	/* Dessine la sphère bas gauche, réflexion diffuse, émission, pas de réflexion ambiante ou spéculaire*/
 	glPushMatrix();
-		glTranslatef(-2.0f, 2.0f, 0.0f);
+		glTranslatef(0.0f, 2.9f, 0.0f);
 		glMaterialfv(GL_FRONT, GL_AMBIENT, no_mat);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, no_mat);
@@ -240,165 +258,204 @@ void display(void){
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
 	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
-    //left shoulder
- /*   glPushMatrix();
-        glTranslatef(-3,0,0);
-        /*glRotatef(angle2, 1, 0, -1);*/
-    /*    glScalef(2,1,1);
-        glutWireCube(1.0);
-    glPopMatrix();
-    //left arm
-      glPushMatrix();
-        /*glRotatef(angle2, 0, 0, 1);*/
-  /*      glTranslatef(-5,0,0);
-        glScalef(4,1,1);
-        glutWireCube(1.0);
-    glPopMatrix();
-   //torso
-   glPushMatrix();
-        glTranslatef(-1,0,0);
-        /*glRotatef(angle2, 1, 0, -1);*/
- /*       glScalef(2,1,1);
-        glutWireCube(2.0);
-   glPopMatrix();
-   //right shoulder
-   glPushMatrix();
-        glTranslatef(1,0,0);
-      /*  glRotatef(angle2, 1, 0, -1);*/
-    /*    glScalef(2,1,1);
-        glutWireCube(1.0);
-    glPopMatrix();
-    //right arm
-    glPushMatrix();
-        glRotatef(angle, 0, 0, 1);
-        glTranslatef(3,0,0);
-        glScalef(4,1,1);
-        glutWireCube(1.0);
-    glPopMatrix();
-    //right hand
-    glPushMatrix();
-        glRotatef(angle, 0, 0, 1);
-        glTranslatef(5,0,0);
-        glScalef(4,1,1);
-        glutWireCube(0.1);
-    glPopMatrix();*/
 
  //torso
  glPushMatrix();
-    glTranslatef(-2, -1, 0);
-    glRotatef(torso, 0,0,-1);
+    glTranslatef(0, 1.5, 0);
+    glRotatef(torso, 1,0,0);
     glPushMatrix();
-        glScalef(2,1,1);
-        glutWireCube(1.5);
+        obj = gluNewQuadric();
+        gluCylinder(obj, 1, 0.7, 3, 30, 30);
         /*glutSolidCube(1.7);*/
     glPopMatrix();
  glPopMatrix();
 
- // Upper Left Leg
 
-  /*glPushMatrix();
- glTranslatef(-1.7, -2.5, -0.5);
-    glRotatef(torso, 0,-1,0);
-    glPushMatrix();
-        glScalef(2,1,1);
-        glutWireCube(0.8);
-    glPopMatrix();
-glPopMatrix();
-*/
- //Upper Right Leg
- /*  glPushMatrix();
- glTranslatef(-2.2, -2.5, -0.5);
-    glRotatef(torso, 0,-1,0);
-    glPushMatrix();
-        glScalef(2,1,1);
-        glutWireCube(0.8);
-    glPopMatrix();
-glPopMatrix();*/
-
- //Lower Left Leg
- glPushMatrix();
- glTranslatef(-1.5, -3.2, 0.5);
-    glRotatef(torso, 0,0,-1);
-    glPushMatrix();
-        glScalef(2,1,1);
-        glutWireCube(0.8);
-    glPopMatrix();
-glPopMatrix();
-
-//Lower Right Leg
-glPushMatrix();
- glTranslatef(-2.3, -3.2, 0.5);
-    glRotatef(torso, 0,0,-1);
-    glPushMatrix();
-        glScalef(2,1,1);
-        glutWireCube(0.8);
-    glPopMatrix();
-glPopMatrix();
-
-//Right Part of Body
- glPushMatrix();
-        glTranslatef(-3,0,0);
-        glutSolidSphere(0.5,10,10);
-        glRotatef(left_shoulder, 0, 0, -1);
-        glTranslatef(-1,0,0);
-    glPushMatrix();
-        glScalef(2,1,1);
-        glutWireCube(1.0);
-    glPopMatrix();
-        glTranslatef(-1,0,0);
-        glutSolidSphere(0.5,10,10);
-        glRotatef(left_arm, 0, 0, -1);
-        glTranslatef(-1,0,0);
-    glPushMatrix();
-        glScalef(2,1,1);
-        glutWireCube(1.0);
-    glPopMatrix();
-    glTranslatef(-1, 0,0);
-     glutSolidSphere(0.5,10,10);
-        glRotatef(left_shoulder, 0, 0, -1);//left hand
-        glTranslatef(-0.8,0,0);
-    glPushMatrix();
-        glScalef(1,0.5,0.5);
-        glutWireCube(0.4);
-    glPopMatrix();
-glPopMatrix();
-
-
-
-
-
-
-//left part of Body
+ //left part of Body
    glPushMatrix();
-        glTranslatef(-1,0,0);
+        glTranslatef(1,1,0);
+        glColor3f(1.0f, 0.5f, 0.0f);
         glutSolidSphere(0.5,10,10);
+        glColor3f(0.0f, 0.0f, 1.0f);
         glRotatef(left_shoulder, 0, 0, 1);
         glTranslatef(1,0,0);
     glPushMatrix();
         glScalef(2,1,1);
-        glutWireCube(1.0);
+        glutSolidCube(1.0);
     glPopMatrix();
         glTranslatef(1,0,0);
+        glColor3f(1.0f, 0.5f, 0.0f);
         glutSolidSphere(0.5,10,10);
+        glColor3f(0.0f, 0.0f, 1.0f);
         glRotatef(left_arm, 0, 0, 1);
         glTranslatef(1,0,0);
     glPushMatrix();
         glScalef(2,1,1);
-        glutWireCube(1.0);
+        glutSolidCube(1.0);
     glPopMatrix();
     glTranslatef(1,0,0);
     glutSolidSphere(0.5,10,10);
         glRotatef(left_shoulder, 0, 0, 1);//left hand
         glTranslatef(0.8,0,0);
     glPushMatrix();
+        glColor3f(1.0f, 1.0f, 1.0f);
         glScalef(1,0.5,0.5);
-        glutWireCube(0.4);
+        glutSolidCube(0.4);
     glPopMatrix();
 glPopMatrix();
 
+ 	glColor3f(0.0f, 0.0f, 1.0f);
+//Right Part of Body
+ glPushMatrix();
+        glTranslatef(-1,1,0);
+        glColor3f(1.0f, 0.5f, 0.0f);
+        glutSolidSphere(0.5,10,10);
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glRotatef(left_shoulder, 0, 0, -1);
+        glTranslatef(-1,0,0);
+    glPushMatrix();
+        glScalef(2,1,1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+        glTranslatef(-1,0,0);
+        glColor3f(1.0f, 0.5f, 0.0f);
+        glutSolidSphere(0.5,10,10);
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glRotatef(left_arm, 0, 0, -1);
+        glTranslatef(-1,0,0);
+    glPushMatrix();
+        glScalef(2,1,1);
+        glutSolidCube(1.0);
+    glPopMatrix();
+    glTranslatef(-1, 0,0);
+     glutSolidSphere(0.5,10,10);
+        glRotatef(left_shoulder, 0, 0, -1);//left hand
+        glTranslatef(-0.8,0,0);
+    glPushMatrix();
+     	glColor3f(1.0f, 1.0f, 1.0f);
+        glScalef(1,0.5,0.5);
+        glutSolidCube(0.4);
+    glPopMatrix();
+glPopMatrix();
+
+ 	 	glColor3f(0.0f, 1.0f, 1.0f);
+ //Lower Left Leg
+ glPushMatrix();
+ glTranslatef(-0.4, -1.7, 0.2);
+  glutSolidSphere(0.5,10,10);
+ glRotatef(torso, 1, 0, 0);
+    glPushMatrix();
+       obj = gluNewQuadric();
+        gluCylinder(obj, 0.4, 0.4, 1, 30, 30);
+    glPopMatrix();
+    glTranslatef(0, 0, 1);
+  glutSolidSphere(0.5,10,10);
+ glRotatef(torso, 1, 0, 0);
+    glPushMatrix();
+       obj = gluNewQuadric();
+        gluCylinder(obj, 0.4, 0.4, 1.5, 30, 30);
+    glPopMatrix();
+     glTranslatef(0, 0, 1.4);
+     glutSolidSphere(0.5,10,10);
+glPopMatrix();
+
+//Lower Right Leg
+ 	glColor3f(0.0f, 1.0f, 1.0f);
+glPushMatrix();
+ glTranslatef(0.5, -1.7, 0.2);
+ glutSolidSphere(0.5,10,10);
+ glRotatef(torso, 1, 0, 0);
+    glPushMatrix();
+        obj = gluNewQuadric();
+        gluCylinder(obj, 0.4, 0.4, 1, 30, 30);
+    glPopMatrix();
+    glTranslatef(0, 0, 1);
+ glutSolidSphere(0.5,10,10);
+  glRotatef(torso, 1, 0, 0);
+    glPushMatrix();
+        obj = gluNewQuadric();
+        gluCylinder(obj, 0.4, 0.4, 1.5, 30, 30);
+    glPopMatrix();
+    glTranslatef(0, 0, 1.4);
+     glutSolidSphere(0.5,10,10);
+glPopMatrix();
+
+//neck
+glColor3f(1.0f, 0.5f, 0.0f);
+glPushMatrix();
+ glTranslatef(0, 2, 0);
+ glRotatef(torso, 1, 0, 0);
+    glPushMatrix();
+        /*glScalef(2,1,1);*/
+        obj = gluNewQuadric();
+        gluCylinder(obj, 0.4, 0.4, 1, 30, 30);
+        glPopMatrix();
+glPopMatrix();
+//right eye
+glColor3f(0.0f, 0.0f, 0.0f);
+glPushMatrix();
+ glTranslatef(0.3, 3, 0.1);
+    glPushMatrix();
+        /*glScalef(2,1,1);*/
+        obj = gluNewQuadric();
+        gluCylinder(obj, 0.1, 0.1, 1, 30, 30);
+    glPopMatrix();
+glPopMatrix();
+//left eye
+glColor3f(0.0f, 0.0f, 0.0f);
+glPushMatrix();
+ glTranslatef(-0.3, 3, 0.1);
+    glPushMatrix();
+        /*glScalef(2,1,1);*/
+        obj = gluNewQuadric();
+        gluCylinder(obj, 0.1, 0.1, 1, 30, 30);
+    glPopMatrix();
+glPopMatrix();
+
+//Hat
+        glTranslatef(0.0f, 4.5f, 0.0f);
+     glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
+      // Front
+      glNormal3f(0.0f,0.0f,1.0f);
+      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glVertex3f(-1.0f, -1.0f, 1.0f);
+      glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glVertex3f(1.0f, -1.0f, 1.0f);
+
+      // Right
+      glNormal3f(1.0f,0.0f,0.0f);
+      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glVertex3f(1.0f, -1.0f, 1.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glVertex3f(1.0f, -1.0f, -1.0f);
+
+      // Back
+      glNormal3f(0.0f,0.0f,-1.0f);
+      glColor3f(1.0f, 0.0f, 0.0f);     // Red
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);     // Green
+      glVertex3f(1.0f, -1.0f, -1.0f);
+      glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+      glVertex3f(-1.0f, -1.0f, -1.0f);
+
+      // Left
+    glNormal3f(-1.0f,0.0f,0.0f);
+      glColor3f(1.0f,0.0f,0.0f);       // Red
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f,1.0f,0.0f);       // Blue
+      glVertex3f(-1.0f,-1.0f,-1.0f);
+      glColor3f(0.0f,0.0f,1.0f);       // Green
+      glVertex3f(-1.0f,-1.0f, 1.0f);
+   glEnd();   // Done drawing the pyramid
 
 
-/*
+    if(f == 1){
+    glTranslatef(0.0f, -4.7f, 0.0f);
+    glColor3f(1.0f, 0.5f, 0.0f);
 	glBegin(GL_QUADS);
 
 	//Front
@@ -431,8 +488,9 @@ glPopMatrix();
 
 	glEnd();
 	glPopMatrix();
+    }
 
-*/
+
 	glutSwapBuffers();
 
 	/* On force l'affichage */
@@ -466,7 +524,7 @@ void update(int value){
 		//left shoulder
 	if (left_shoulder < 20 && left_shoulder_check == 0 && left_arm_check == 0){
 		left_shoulder += 0.11;
-		printf("%f\n", left_shoulder);
+		/*printf("%f\n", left_shoulder);*/
 	}
 	if(left_shoulder > 20){
         left_shoulder_check = 1;
@@ -500,7 +558,7 @@ void reshape(int w, int h){
 
 
 
-/* Fonction de gestion au clavier des activations des lumières */
+/* Fonction de gestion au clavier */
 void keyboard(unsigned char key, int x, int y) {
 		switch (key){
 
@@ -536,9 +594,82 @@ void keyboard(unsigned char key, int x, int y) {
 			case 'L':   /* désactivation des lumières  */
 				glDisable(GL_LIGHTING);
 				glutPostRedisplay();
+				xo = 0;
+				yo = 0;
+				zo = 5;
 				break;
 
-			case 'q':   /* Quitter le programme */
+			case 'w':   /* Quitter le programme */
 				exit(0);
+
+            case 'z': //monter caméra en regardant le centre
+                if(teta < 89){
+                    teta+=0.2;
+                }
+                break;
+
+            case 's': //descendre caméra en regardant le centre
+                teta -= 0.2;
+                break;
+            case 'd': //tourner à gauche la caméra en regardant le centre
+                R += 0.2;
+                break;
+
+            case 'q': //tourner à droite la caméra en regardant le centre
+                R -= 0.2;
+                break;
+             case 'i': //tourner à gauche la caméra en regardant le centre
+                alpha += 0.2;
+                break;
+
+            case 'o': //tourner à droite la caméra en regardant le centre
+                alpha -= 0.2;
+                break;
+            case 'f': //activer/décativer donut
+                if(f == 0){
+
+                    f = 1;
+                    break;
+                }else{
+                    f = 0;
+                    break;
+                }
 		}
 }
+
+
+
+
+
+/*
+    //COOL TRIANGLE
+         glBegin(GL_TRIANGLES);
+        //FRONT
+    glRotatef(torso, 0, 0, 1);
+    glColor3f( 1, 0, 0 ); // red
+    glVertex3f( -0.8, -0.8 , 0);
+    glColor3f( 0, 1, 0 ); // green
+    glVertex3f( 0.8, -0.8, 0 );
+    glColor3f( 0, 0, 1 ); // blue
+    glVertex3f( 0, 0.9, 0 );
+
+    //SIDE
+
+    glColor3f( 1, 0, 0 ); // red
+    glVertex3f( -0.8, -0.8, 1.6 );
+    glColor3f( 0, 1, 0 ); // green
+    glVertex3f( 0.8, -0.8, 1.6 );
+    glColor3f( 0, 0, 1 ); // blue
+    glVertex3f( 0, 0.9, 0 );
+
+    //BASE
+     glColor3f( 1, 0, 0 ); // red
+    glVertex3f( -0.8, -0.8, 1.6 );
+    glColor3f( 0, 1, 0 ); // green
+    glVertex3f( 0.8, -0.8, 1.6 );
+    glColor3f( 0, 0, 1 ); // blue
+    glVertex3f( -0.8, -0.8, 0 );
+    glVertex3f( 0.8, -0.8, 0 );
+
+    glEnd();
+*/
